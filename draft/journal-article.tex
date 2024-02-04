@@ -1,0 +1,128 @@
+\documentclass[USenglish]{article}	
+% for 2-column layout use \documentclass[USenglish,twocolumn]{article}
+
+\usepackage[utf8]{inputenc}				%(only for the pdftex engine)
+%\RequirePackage[no-math]{fontspec}[2017/03/31]%(only for the luatex or the xetex engine)
+\usepackage[big,online]{dgruyter}	%values: small,big | online,print,work
+\usepackage{lmodern} 
+\usepackage{microtype}
+\usepackage[numbers,square,sort&compress]{natbib}
+\usepackage{bm}
+
+% New theorem-like environments will be introduced by using the commands \theoremstyle and \newtheorem.
+% Please note that the environments proof and definition are already defined within dgryuter.sty.
+\theoremstyle{dgthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{assertion}{Assertion}
+\newtheorem{result}{Result}
+\newtheorem{conclusion}{Conclusion}
+
+\theoremstyle{dgdef}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+
+\let\vec\bm
+
+\begin{document}
+
+	
+%%%--------------------------------------------%%%
+	\articletype{Research Article}
+	%\received{Month	DD, YYYY}
+	%\revised{Month	DD, YYYY}
+ % \accepted{Month	DD, YYYY}
+ % \journalname{De~Gruyter~Journal}
+  %\journalyear{YYYY}
+  %\journalvolume{XX}
+  %\journalissue{X}
+  \startpage{1}
+  %\aop
+  %\DOI{10.1515/sample-YYYY-XXXX}
+%%%--------------------------------------------%%%
+
+\title{On sufficient conditions for the well-posedness of mixed finite element methods for a class of eigenvalue problems}
+\runningtitle{On sufficient conditions for mixed finite element eigenvalue problems}
+%\subtitle{Insert subtitle if needed}
+
+%\ use * to mark the author as the corresponding author
+\author[1]{Fleurianne Bertrand}
+\author[2]{Daniele Boffi} 
+\author*[3]{Umberto Zerbinati}
+\runningauthor{F.~Bertrand et al.}
+\affil[1]{\protect\raggedright Chemnitz University of Technology, Chemnitz, Germany, e-mail: fleurianne.bertrand@mathematik.tu-chemnitz.de}
+\affil[2]{\protect\raggedright King Abdullah University of Science and Technology, Thuwal, Saudi Arabia, e-mail: daniele.boffi@kaust.edu.sa}
+\affil[3]{\protect\raggedright University of Oxford, Oxford, United Kingdom, e-mail: zerbinati@maths.ox.ac.uk}
+	
+%\communicated{...}
+%\dedication{...}
+	
+\abstract{}
+
+\keywords{}
+
+\maketitle
+	
+	
+\section{Introduction}
+Eigenvalue problems play a fundamental role in engineer. In particular, in structural mechanics, the discretisation and solution of eigenvalue problems are at the heart of \textit{modal analysis}, i.e. the characterization of the response of an elastic body in terms of its natural modes of vibration.
+Let us consider a body $\Omega\subset \mathbb{R}^d$, with linearly elastic Cauchy stress tensor, i.e $\sigma = \lambda (\nabla\cdot \vec{u})\mathbb{I}+2\mu\varepsilon(\vec{u})$, where $\vec{u}:\Omega\to \mathbb{R}^d$ reppresent the displacement of the elastic body and $\varepsilon(\vec{u})$ is the symmetric gradient of $\vec{u}$.
+Under these hypotheses, the balance law for the linear momentum can be expressed in weak form as 
+\begin{equation}
+  \label{eq:elasticityPrimalSource}
+  2\mu \int_{\Omega} \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x} + \lambda \int_{\Omega} (\nabla \cdot \vec{u})(\nabla\cdot \vec{v})\, d\vec{x} = \int_{\Omega}\vec{f}\cdot \vec{v} \,d\vec{x} \qquad \forall \vec{v}\in \vec{V},
+\end{equation}
+where $\vec{f}:\Omega\to \mathbb{R}^d$ is the bulk force action on the body and $\vec{V}$ is usual Sobolev space $\vec{H}^1_0(\Omega)$. The \textit{modal analysis} corresponding to the previous source problem can be formulated as the following eigenvalue problem:
+\begin{equation}
+  \label{eq:elasticityPrimalEig}
+  2\mu \int_{\Omega} \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x} + \lambda \int_{\Omega} (\nabla \cdot \vec{u})(\nabla\cdot \vec{v})\, d\vec{x} = \lambda \int_{\Omega}\vec{u}\cdot \vec{v} \,d\vec{x} \qquad \forall \vec{v} \in \vec{V}.
+\end{equation}
+
+It is a well-known fact that for nearly incompressible elasticity, i.e. $\lambda\to \infty$, finite element simulation can experience a degraded order of convergence or even converge to the wrong solution \cite{AinsworthParker}. Such phenomena are broadly referred to as \textbf{locking}. Over the years many different approaches have been proposed to escape locking.
+For instance, the use of high-order finite elements or of specific mesh topology is known to mitigate or even cure in certain cases the locking phenomenon, see \cite{AinsworthParker, BabuskaSuri, BBF} and reference therein.
+
+Another widely adopted approach is to introduce a Lagrange multiplier to enforce the divergence-free condition, which is equivalent to adding to \eqref{eq:elasticityPrimalEig} the constraint
+\begin{equation}
+  \label{eq:lagrangeMultiplier}
+  \int_\Omega (\nabla\cdot \vec{u})q = 0 \qquad \forall  q\in Q(\Omega), \text{ with } Q=L^2(\Omega).
+\end{equation}
+Clearly, the previous equation allows us to remove the second term in the right-hand side of \eqref{eq:elasticityPrimalEig}, also known as the \textit{spherical response} term and therefore also the dependence on $\lambda$.
+Unfortunately, we are left with an overconstrained system of equations.
+To obviate this problem we introduce an additional unknown, i.e. the \textit{mechanical pressure} defined as the trace of the Cauchy stress tensor: $p=\nabla\cdot \vec{u}$. We now enforce weakly its definition
+\begin{equation}
+  \label{eq:pressure}
+  \int_\Omega p(\nabla\cdot \vec{v})\,d\vec{x} = \int_\Omega (\nabla\cdot\vec{u})(\nabla\cdot\vec{v})\,d\vec{x} \qquad \forall \vec{v}\in \vec{V}.
+\end{equation}
+The system formed by \eqref{eq:elasticityPrimalEig} summed to \eqref{eq:pressure} together with \eqref{eq:lagrangeMultiplier} is the so-called \textit{Stokes eigenvalue problem}, i.e.
+\begin{equation}
+  \label{eq:stokes}
+  \begin{aligned}
+    2\mu \int_\Omega \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x}-\int_\Omega \nabla p \cdot \vec{v}\, d\vec{x} &= \lambda \int_\Omega \vec{u}\cdot \vec{v}\, d\vec{x} \qquad &\vec{v}\in \vec{V}\\
+    -\int_\Omega (\nabla\cdot \vec{u})q &= 0 \qquad&q \in Q.
+  \end{aligned}
+\end{equation}
+When considering the previous eigenvalue problem one can escape the locking phenomenon if two conditions known as strong and weak approximability conditions are verified, a brief overview of such conditions can be found in section 2 and full detail can be found in \cite{BBG, BBF}.
+
+This is a striking difference with the source problem corresponding to \eqref{eq:stokes} for which the necessary and sufficient condition for well-posedness, known as the inf-sup condition, is stronger than the strong and weak approximability.
+More detail on the inf-sup condition for eigenvalue problems of the form of \eqref{eq:stokes} can be found in section 3 and a general study of the inf-sup condition can be found in \cite{BBF, Brezzi}.
+
+In this paper, we investigate certain sufficient conditions that guarantee the well-posedness and optimal convergence rate of the mixed finite element method for the class of eigenvalue problems of the type of \eqref{eq:stokes}, also known as $(f\!-\!0)$ eigenvalue problems.
+In particular, we aim to discuss two general criteria that guarantee the strong condition that in the author's opinion are easier to verify than the strong approximability condition itself.
+
+To achieve this goal in section 2 we briefly recall the Boffi-Brezzi-Gastaldi (BBG) theory of the well-posedness of the mixed finite element method for $(f\!-\!0)$ eigenvalue problems and quickly review the use of Babuska-Osborn theory to estimate the order of convergence of the eigenvalues and eigenfunctions.
+In section 3 we discuss how the inf-sup condition can be used to prove the strong approximability condition.
+In section 4 we investigate the scenario in which the inf-sup condition is not satisfied and we discuss how the strong approximability condition is a consequence of the exactness and boundedness of the right inverse of the discrete curl operator.
+In section 5 we recast the result of sections 3 and 4 in terms of finite element exterior calculus.
+In section 6 we discuss the numerical linear algebra aspects of a discretisation verifying the criteria presented in sections 3 and 4.
+Lastly, in section 7 we present numerical results that confirm the theoretical findings of the previous sections.
+The numerical examples presented include the use of $\mathbb{P}_1-\mathbb{P}_1$ elements on Powell-Sabin split meshes, $\mathbb{P}_2-\mathbb{P}_2$ elements on Alfeld split meshes and $\mathbb{P}_3-\mathbb{P}_2^{\,disc}$ elements on criss-cross split meshes for the Stokes eigenvalue problem in two dimensions.
+We will also present in this section a new family of elements of the Bercovier--Pironneau type on Powll-Sabin and Alfeld splits and show that the rate of convergence for this family of elements fits the analysis presented in section 4.
+The numerical example will also show that the rate of convergence of the eigenvalues is independent of any geometrical parameter of the mesh singularity, contrary to what is observed for the source problem.
+
+\bibliographystyle{plain} % We choose the "plain" reference style
+\bibliography{metrix}
+
+\end{document}
