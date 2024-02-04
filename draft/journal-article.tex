@@ -75,11 +75,17 @@ Under these hypotheses, the balance law for the linear momentum can be expressed
   \label{eq:elasticityPrimalSource}
   2\mu \int_{\Omega} \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x} + \lambda \int_{\Omega} (\nabla \cdot \vec{u})(\nabla\cdot \vec{v})\, d\vec{x} = \int_{\Omega}\vec{f}\cdot \vec{v} \,d\vec{x} \qquad \forall \vec{v}\in \vec{V},
 \end{equation}
-where $\vec{f}:\Omega\to \mathbb{R}^d$ is the bulk force action on the body and $\vec{V}$ is usual Sobolev space $\vec{H}^1_0(\Omega)$. The \textit{modal analysis} corresponding to the previous source problem can be formulated as the following eigenvalue problem:
+where $\vec{f}:\Omega\to \mathbb{R}^d$ is the bulk force actioning on the body and $\vec{V}$ is usual Sobolev space $\vec{H}^1_0(\Omega)$. The \textit{modal analysis} corresponding to the previous source problem can be formulated as the following eigenvalue problem:
 \begin{equation}
   \label{eq:elasticityPrimalEig}
   2\mu \int_{\Omega} \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x} + \lambda \int_{\Omega} (\nabla \cdot \vec{u})(\nabla\cdot \vec{v})\, d\vec{x} = \lambda \int_{\Omega}\vec{u}\cdot \vec{v} \,d\vec{x} \qquad \forall \vec{v} \in \vec{V}.
 \end{equation}
+Introducing the mechanical pressure $p:\Omega\to \mathbb{R}$ defined as the trace of the stress tensor, i.e. $p = 2(\lambda+\mu) \nabla\cdot \vec{u}$, the previous eigenvalue problem can be recast as the following eigenvalue problem:
+\begin{equation}
+  \label{eq:elasticityPressureEig}
+    2\mu \int_\Omega \widehat\varepsilon(\vec{u}):\widehat \varepsilon(\vec{v})\, d\vec{x}+\int_\Omega p (\nabla \cdot \vec{v})\, d\vec{x} = \lambda \int_\Omega \vec{u}\cdot \vec{v}\, d\vec{x} \qquad \vec{v}\in \vec{V},
+\end{equation}
+where $\widehat\varepsilon(\vec{u}) = \varepsilon(\vec{u})-\frac{1}{d}\nabla(\nabla\cdot \vec{u})\mathbb{I}$ is the deviatoric part of the symmetric gradient of $\vec{u}$.
 
 It is a well-known fact that for nearly incompressible elasticity, i.e. $\lambda\to \infty$, finite element simulation can experience a degraded order of convergence or even converge to the wrong solution \cite{AinsworthParker}. Such phenomena are broadly referred to as \textbf{locking}. Over the years many different approaches have been proposed to escape locking.
 For instance, the use of high-order finite elements or of specific mesh topology is known to mitigate or even cure in certain cases the locking phenomenon, see \cite{AinsworthParker, BabuskaSuri, BBF} and reference therein.
@@ -89,21 +95,15 @@ Another widely adopted approach is to introduce a Lagrange multiplier to enforce
   \label{eq:lagrangeMultiplier}
   \int_\Omega (\nabla\cdot \vec{u})q = 0 \qquad \forall  q\in Q(\Omega), \text{ with } Q=L^2(\Omega).
 \end{equation}
-Clearly, the previous equation allows us to remove the second term in the right-hand side of \eqref{eq:elasticityPrimalEig}, also known as the \textit{spherical response} term and therefore also the dependence on $\lambda$.
-Unfortunately, we are left with an overconstrained system of equations.
-To obviate this problem we introduce an additional unknown, i.e. the \textit{mechanical pressure} defined as the trace of the Cauchy stress tensor: $p=\nabla\cdot \vec{u}$. We now enforce weakly its definition
-\begin{equation}
-  \label{eq:pressure}
-  \int_\Omega p(\nabla\cdot \vec{v})\,d\vec{x} = \int_\Omega (\nabla\cdot\vec{u})(\nabla\cdot\vec{v})\,d\vec{x} \qquad \forall \vec{v}\in \vec{V}.
-\end{equation}
-The system formed by \eqref{eq:elasticityPrimalEig} summed to \eqref{eq:pressure} together with \eqref{eq:lagrangeMultiplier} is the so-called \textit{Stokes eigenvalue problem}, i.e.
+Hence, in the limit $\lambda$ ifinitly large the eigenvalue problem \eqref{eq:elasticityPressureEig} becomes the Stokes eigenvalue problem:
 \begin{equation}
   \label{eq:stokes}
   \begin{aligned}
-    2\mu \int_\Omega \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x}-\int_\Omega \nabla p \cdot \vec{v}\, d\vec{x} &= \lambda \int_\Omega \vec{u}\cdot \vec{v}\, d\vec{x} \qquad &\vec{v}\in \vec{V}\\
-    -\int_\Omega (\nabla\cdot \vec{u})q &= 0 \qquad&q \in Q.
+    2\mu \int_\Omega \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x}-\int_\Omega \nabla p \cdot \vec{v}\, d\vec{x} &= \lambda \int_\Omega \vec{u}\cdot \vec{v}\, d\vec{x} \qquad &\vec{v}\in \vec{V},\\
+    -\int_\Omega (\nabla\cdot \vec{u})q &= 0 \qquad&q \in Q,
   \end{aligned}
 \end{equation}
+where the pressure $p$ has now the meaning of being a Lagrange multiplier enforcing the divergence-free condition, rather than the mechanical pressure.
 When considering the previous eigenvalue problem one can escape the locking phenomenon if two conditions known as strong and weak approximability conditions are verified, a brief overview of such conditions can be found in section 2 and full detail can be found in \cite{BBG, BBF}.
 
 This is a striking difference with the source problem corresponding to \eqref{eq:stokes} for which the necessary and sufficient condition for well-posedness, known as the inf-sup condition, is stronger than the strong and weak approximability.
