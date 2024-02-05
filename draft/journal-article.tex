@@ -68,8 +68,8 @@
 	
 	
 \section{Introduction}
-Eigenvalue problems play a fundamental role in engineer. In particular, in structural mechanics, the discretisation and solution of eigenvalue problems are at the heart of \textit{modal analysis}, i.e. the characterization of the response of an elastic body in terms of its natural modes of vibration.
-Let us consider a body $\Omega\subset \mathbb{R}^d$, with linearly elastic Cauchy stress tensor, i.e $\sigma = \lambda (\nabla\cdot \vec{u})\mathbb{I}+2\mu\varepsilon(\vec{u})$, where $\vec{u}:\Omega\to \mathbb{R}^d$ reppresent the displacement of the elastic body and $\varepsilon(\vec{u})$ is the symmetric gradient of $\vec{u}$.
+Eigenvalue problems play a fundamental role in engineering. In particular, in structural mechanics, the discretisation and solution of eigenvalue problems are at the heart of \textit{modal analysis}, i.e. the characterization of the response of an elastic body in terms of its natural modes of vibration.
+Let us consider a body $\Omega\subset \mathbb{R}^d$, with linearly elastic Cauchy stress tensor, i.e $\sigma = \lambda (\nabla\cdot \vec{u})\mathbb{I}+2\mu\varepsilon(\vec{u})$, where $\vec{u}:\Omega\to \mathbb{R}^d$ reppresents the displacement of the elastic body and $\varepsilon(\vec{u})$ is the symmetric gradient of $\vec{u}$.
 Under these hypotheses, the balance law for the linear momentum can be expressed in weak form as 
 \begin{equation}
   \label{eq:elasticityPrimalSource}
@@ -78,48 +78,46 @@ Under these hypotheses, the balance law for the linear momentum can be expressed
 where $\vec{f}:\Omega\to \mathbb{R}^d$ is the bulk force actioning on the body and $\vec{V}$ is usual Sobolev space $\vec{H}^1_0(\Omega)$. The \textit{modal analysis} corresponding to the previous source problem can be formulated as the following eigenvalue problem:
 \begin{equation}
   \label{eq:elasticityPrimalEig}
-  2\mu \int_{\Omega} \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x} + \lambda \int_{\Omega} (\nabla \cdot \vec{u})(\nabla\cdot \vec{v})\, d\vec{x} = \lambda \int_{\Omega}\vec{u}\cdot \vec{v} \,d\vec{x} \qquad \forall \vec{v} \in \vec{V}.
+  2\mu \int_{\Omega} \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x} + \lambda \int_{\Omega} (\nabla \cdot \vec{u})(\nabla\cdot \vec{v})\, d\vec{x} = \omega \int_{\Omega}\vec{u}\cdot \vec{v} \,d\vec{x} \qquad \forall \vec{v} \in \vec{V}.
 \end{equation}
 Introducing the mechanical pressure $p:\Omega\to \mathbb{R}$ defined as the trace of the stress tensor, i.e. $p = 2(\lambda+\mu) \nabla\cdot \vec{u}$, the previous eigenvalue problem can be recast as the following eigenvalue problem:
 \begin{equation}
   \label{eq:elasticityPressureEig}
-    2\mu \int_\Omega \widehat\varepsilon(\vec{u}):\widehat \varepsilon(\vec{v})\, d\vec{x}+\int_\Omega p (\nabla \cdot \vec{v})\, d\vec{x} = \lambda \int_\Omega \vec{u}\cdot \vec{v}\, d\vec{x} \qquad \vec{v}\in \vec{V},
+    2\mu \int_\Omega \widehat\varepsilon(\vec{u}):\widehat \varepsilon(\vec{v})\, d\vec{x}+\int_\Omega p (\nabla \cdot \vec{v})\, d\vec{x} = \omega \int_\Omega \vec{u}\cdot \vec{v}\, d\vec{x} \qquad \vec{v}\in \vec{V},
 \end{equation}
-where $\widehat\varepsilon(\vec{u}) = \varepsilon(\vec{u})-\frac{1}{d}\nabla(\nabla\cdot \vec{u})\mathbb{I}$ is the deviatoric part of the symmetric gradient of $\vec{u}$.
+where $\widehat\varepsilon(\vec{u}) = \varepsilon(\vec{u})-\frac{1}{d}(\nabla\cdot \vec{u})\mathbb{I}$ is the deviatoric part of the symmetric gradient of $\vec{u}$.
 
-It is a well-known fact that for nearly incompressible elasticity, i.e. $\lambda\to \infty$, finite element simulation can experience a degraded order of convergence or even converge to the wrong solution \cite{AinsworthParker}. Such phenomena are broadly referred to as \textbf{locking}. Over the years many different approaches have been proposed to escape locking.
+It is a well-known fact that for nearly incompressible elasticity, i.e. $\lambda\to \infty$, finite element simulation can experience a degraded order of convergence or even converge to the wrong solution \cite{AinsworthParker}. Such phenomena are broadly referred to as \textbf{locking}. Over the years many different approaches have been proposed to overcome locking.
 For instance, the use of high-order finite elements or of specific mesh topology is known to mitigate or even cure in certain cases the locking phenomenon, see \cite{AinsworthParker, BabuskaSuri, BBF} and reference therein.
 
 Another widely adopted approach is to introduce a Lagrange multiplier to enforce the divergence-free condition, which is equivalent to adding to \eqref{eq:elasticityPrimalEig} the constraint
 \begin{equation}
   \label{eq:lagrangeMultiplier}
-  \int_\Omega (\nabla\cdot \vec{u})q = 0 \qquad \forall  q\in Q(\Omega), \text{ with } Q=L^2(\Omega).
+  \int_\Omega (\nabla\cdot \vec{u})q = 0 \qquad \forall  q\in Q, \text{ with } Q=L^2(\Omega).
 \end{equation}
 Hence, in the limit $\lambda$ ifinitly large the eigenvalue problem \eqref{eq:elasticityPressureEig} becomes the Stokes eigenvalue problem:
 \begin{equation}
   \label{eq:stokes}
   \begin{aligned}
-    2\mu \int_\Omega \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x}-\int_\Omega \nabla p \cdot \vec{v}\, d\vec{x} &= \lambda \int_\Omega \vec{u}\cdot \vec{v}\, d\vec{x} \qquad &\vec{v}\in \vec{V},\\
+    2\mu \int_\Omega \varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x}-\int_\Omega \nabla p \cdot \vec{v}\, d\vec{x} &= \omega \int_\Omega \vec{u}\cdot \vec{v}\, d\vec{x} \qquad &\vec{v}\in \vec{V},\\
     -\int_\Omega (\nabla\cdot \vec{u})q &= 0 \qquad&q \in Q,
   \end{aligned}
 \end{equation}
 where the pressure $p$ has now the meaning of being a Lagrange multiplier enforcing the divergence-free condition, rather than the mechanical pressure.
-When considering the previous eigenvalue problem one can escape the locking phenomenon if two conditions known as strong and weak approximability conditions are verified, a brief overview of such conditions can be found in section 2 and full detail can be found in \cite{BBG, BBF}.
-
-This is a striking difference with the source problem corresponding to \eqref{eq:stokes} for which the necessary and sufficient condition for well-posedness, known as the inf-sup condition, is stronger than the strong and weak approximability.
-More detail on the inf-sup condition for eigenvalue problems of the form of \eqref{eq:stokes} can be found in section 3 and a general study of the inf-sup condition can be found in \cite{BBF, Brezzi}.
+When considering the previous eigenvalue problem one can overcome the locking phenomenon if two conditions known as strong and weak approximability conditions are verified, a brief overview of such conditions can be found in section 2 and full detail can be found in \cite{BBG, BBF}.
 
 In this paper, we investigate certain sufficient conditions that guarantee the well-posedness and optimal convergence rate of the mixed finite element method for the class of eigenvalue problems of the type of \eqref{eq:stokes}, also known as $(f\!-\!0)$ eigenvalue problems.
-In particular, we aim to discuss two general criteria that guarantee the strong condition that in the author's opinion are easier to verify than the strong approximability condition itself.
+In particular, we aim to discuss two general criteria that guarantee the strong approximability condition that in the author's opinion are easier to verify than the strong approximability condition itself.
+The first criterion is the inf-sup condition, which is the well-known necessary and sufficient condition for the well-posedness of the Stokes source problem and is also known to be a sufficient condition for the strong approximability condition, see \cite{BBF,BBG}.
+The second criterion is the exactness and boundedness of the right inverse of the discrete curl operator. To the best of the author's knowledge, this criterion has never been discussed as a sufficient condition for the strong approximability condition for the Stokes eigenvalue problem.
 
 To achieve this goal in section 2 we briefly recall the Boffi-Brezzi-Gastaldi (BBG) theory of the well-posedness of the mixed finite element method for $(f\!-\!0)$ eigenvalue problems and quickly review the use of Babuska-Osborn theory to estimate the order of convergence of the eigenvalues and eigenfunctions.
-In section 3 we discuss how the inf-sup condition can be used to prove the strong approximability condition.
-In section 4 we investigate the scenario in which the inf-sup condition is not satisfied and we discuss how the strong approximability condition is a consequence of the exactness and boundedness of the right inverse of the discrete curl operator.
-In section 5 we recast the result of sections 3 and 4 in terms of finite element exterior calculus.
-In section 6 we discuss the numerical linear algebra aspects of a discretisation verifying the criteria presented in sections 3 and 4.
-Lastly, in section 7 we present numerical results that confirm the theoretical findings of the previous sections.
+We will also discuss how the inf-sup condition can be used to prove the strong approximability condition.
+In section 3 we investigate the scenario in which the inf-sup condition is not satisfied and we discuss how the strong approximability condition is a consequence of the exactness and boundedness of the right inverse of the discrete curl operator.
+In section 4 we recast the result of section 3 in terms of finite element exterior calculus and comment on the role that the approximation of the divergence-free condition plays in the convergence of the discrete eigenvalue problem.
+Lastly, in section 5 we present numerical results that confirm the theoretical findings of the previous sections.
 The numerical examples presented include the use of $\mathbb{P}_1-\mathbb{P}_1$ elements on Powell-Sabin split meshes, $\mathbb{P}_2-\mathbb{P}_2$ elements on Alfeld split meshes and $\mathbb{P}_3-\mathbb{P}_2^{\,disc}$ elements on criss-cross split meshes for the Stokes eigenvalue problem in two dimensions.
-We will also present in this section a new family of elements of the Bercovier--Pironneau type on Powll-Sabin and Alfeld splits and show that the rate of convergence for this family of elements fits the analysis presented in section 4.
+We will also present in this section a new family of elements of the Bercovier--Pironneau type on Powll-Sabin and Alfeld splits and show that the rate of convergence for this family of elements fits the analysis presented in section 3.
 The numerical example will also show that the rate of convergence of the eigenvalues is independent of any geometrical parameter of the mesh singularity, contrary to what is observed for the source problem.
 
 \bibliographystyle{plain} % We choose the "plain" reference style
