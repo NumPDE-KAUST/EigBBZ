@@ -8,6 +8,7 @@
 \usepackage{microtype}
 \usepackage[numbers,square,sort&compress]{natbib}
 \usepackage{bm}
+\usepackage{mathtools}
 
 % New theorem-like environments will be introduced by using the commands \theoremstyle and \newtheorem.
 % Please note that the environments proof and definition are already defined within dgryuter.sty.
@@ -26,6 +27,8 @@
 \newtheorem{remark}{Remark}
 
 \let\vec\bm
+\newcommand\norm[1]{\lVert#1\rVert}
+\newcommand\abs[1]{\lvert#1\rvert}
 
 \begin{document}
 
@@ -95,7 +98,7 @@ Another widely adopted approach is to introduce a Lagrange multiplier to enforce
   \label{eq:lagrangeMultiplier}
   \int_\Omega (\nabla\cdot \vec{u})q = 0 \qquad \forall  q\in Q, \text{ with } Q=L^2(\Omega).
 \end{equation}
-Hence, in the limit $\lambda$ ifinitly large the eigenvalue problem \eqref{eq:elasticityPressureEig} becomes the Stokes eigenvalue problem:
+Hence, in the limit $\lambda\to \infty $ the eigenvalue problem \eqref{eq:elasticityPressureEig} becomes the Stokes eigenvalue problem:
 \begin{equation}
   \label{eq:stokes}
   \begin{aligned}
@@ -108,18 +111,135 @@ When considering the previous eigenvalue problem one can overcome the locking ph
 
 In this paper, we investigate certain sufficient conditions that guarantee the well-posedness and optimal convergence rate of the mixed finite element method for the class of eigenvalue problems of the type of \eqref{eq:stokes}, also known as $(f\!-\!0)$ eigenvalue problems.
 In particular, we aim to discuss two general criteria that guarantee the strong approximability condition that in the author's opinion are easier to verify than the strong approximability condition itself.
-The first criterion is the inf-sup condition, which is the well-known necessary and sufficient condition for the well-posedness of the Stokes source problem and is also known to be a sufficient condition for the strong approximability condition, see \cite{BBF,BBG}.
+The first criterion is based on the inf-sup condition, which is the well-known necessary and sufficient condition for the well-posedness of the Stokes source problem and is also known to be a sufficient condition for the strong approximability condition, see \cite{BBF,BBG}.
 The second criterion is the exactness and boundedness of the right inverse of the discrete curl operator. To the best of the author's knowledge, this criterion has never been discussed as a sufficient condition for the strong approximability condition for the Stokes eigenvalue problem.
 
-To achieve this goal in section 2 we briefly recall the Boffi-Brezzi-Gastaldi (BBG) theory of the well-posedness of the mixed finite element method for $(f\!-\!0)$ eigenvalue problems and quickly review the use of Babuska-Osborn theory to estimate the order of convergence of the eigenvalues and eigenfunctions.
-We will also discuss how the inf-sup condition can be used to prove the strong approximability condition.
-In section 3 we investigate the scenario in which the inf-sup condition is not satisfied and we discuss how the strong approximability condition is a consequence of the exactness and boundedness of the right inverse of the discrete curl operator.
+To achieve this goal in section 2 we briefly recall the Boffi-Brezzi-Gastaldi (BBG) theory of the well-posedness of the mixed finite element method for $(f\!-\!0)$ eigenvalue problems and quickly review estimates for the order of convergence of the eigenvalues and eigenfunctions.
+In section 3 we present our main results, i.e.~we investigate the scenario in which the inf-sup condition is not satisfied and we discuss how the strong approximability condition can be a consequence of the exactness and boundedness of the right inverse of the discrete curl operator or of the inf-sup condition on an auxiliary pressure space.
 In section 4 we recast the result of section 3 in terms of finite element exterior calculus and comment on the role that the approximation of the divergence-free condition plays in the convergence of the discrete eigenvalue problem.
 Lastly, in section 5 we present numerical results that confirm the theoretical findings of the previous sections.
 The numerical examples presented include the use of $\mathbb{P}_1-\mathbb{P}_1$ elements on Powell-Sabin split meshes, $\mathbb{P}_2-\mathbb{P}_2$ elements on Alfeld split meshes and $\mathbb{P}_3-\mathbb{P}_2^{\,disc}$ elements on criss-cross split meshes for the Stokes eigenvalue problem in two dimensions.
 We will also present in this section a new family of elements of the Bercovier--Pironneau type on Powll-Sabin and Alfeld splits and show that the rate of convergence for this family of elements fits the analysis presented in section 3.
 The numerical example will also show that the rate of convergence of the eigenvalues is independent of any geometrical parameter of the mesh singularity, contrary to what is observed for the source problem.
 
+\section{The necessary and sufficient for $(f\!-\!0)$ eigenvalue problems}
+Since \cite{BBG} it has been long known that the well-posedness of finite element methods for mixed eigenvalue problems is different from the well-posedness of the source problem.
+In fact, while the inf-sup condition is the necessary and sufficient condition for the well-posedness of the source problem, in the context of eigenvalue problems it is neither necessary nor sufficient.
+In \cite{BBG} the authors showed that the inf-sup condition is a sufficient condition for the well-posedness of $(f-0)$ eigenvalue problems, but it is not necessary.
+In this section, we will briefly recall the main results presented in \cite{BBG}.
+To achieve this objective we will first introduce the bilinear forms:
+\begin{align}
+  a: \vec{V}\times \vec{V}\to \mathbb{R}, \qquad a(\vec{u},\vec{v})\coloneqq\int_{\Omega}\varepsilon(\vec{u}):\varepsilon(\vec{v})\, d\vec{x},\label{eq:a}\\
+  b: \vec{V}\times Q\to \mathbb{R}, \qquad b(\vec{u},q)\coloneqq\int_{\Omega} (\nabla\cdot \vec{u})q\, d\vec{x},\label{eq:b}.
+\end{align}
+Using the bilinear forms defined above we can rewrite the eigenvalue problem \eqref{eq:stokes} as:
+\begin{equation}
+  \begin{aligned}
+    2\mu\, a(\vec{u},\vec{v}) + b(\vec{v},p)&=\omega\, (\vec{u},\vec{v})_{L^2(\Omega)} \qquad &\forall \vec{v}\in \vec{V},\\
+    -b(\vec{u},q)&=0 \qquad &\forall q\in Q.
+  \end{aligned}
+\end{equation}
+We can also write in a compact form the source problem corresponding to \eqref{eq:stokes}, i.e.
+\begin{equation}
+  \label{eq:sourceStokes}
+  \begin{aligned}
+    2\mu\, a(\vec{u},\vec{v}) + b(\vec{v},p)&=(\vec{f},\vec{v})_{L^2(\Omega)} \qquad &\forall \vec{v}\in \vec{V},\\
+    -b(\vec{u},q)&=0 \qquad &\forall q\in Q.
+  \end{aligned}
+\end{equation}
+Since the \eqref{eq:sourceStokes} is well-posed at a continuous level, we can define the solution operator $S:\vec{V}\to \vec{V}\times Q$ as the operator that maps $\vec{f}\in \vec{V}$ to the solution of \eqref{eq:sourceStokes} when $\vec{f}$ is the right-hand side.
+We will now focus our attention on the well-posedness of conforming mixed finite element methods for the eigenvalue problem \eqref{eq:stokes}, i.e. we fix two finite-dimensional subspaces $\vec{V}_h\subset \vec{V}$ and $Q_h\subset Q$ and we consider the following discrete eigenvalue problem:
+\begin{equation}
+  \label{eq:discreteStokes}
+  \begin{aligned}
+    2\mu\, a(\vec{u}_h,\vec{v}_h) + b(\vec{v}_h,p_h)&=\omega\, (\vec{u}_h,\vec{v}_h)_{L^2(\Omega)} \qquad &\forall \vec{v}_h\in \vec{V}_h,\\
+    -b(\vec{u}_h,q_h)&=0 \qquad &\forall q_h\in Q_h.
+  \end{aligned}
+\end{equation}
+and its corresponding source problem:
+\begin{equation}
+  \label{eq:discreteSourceStokes}
+  \begin{aligned}
+    2\mu\, a(\vec{u}_h,\vec{v}_h) + b(\vec{v}_h,p_h)&=(\vec{f}_h,\vec{v}_h)_{L^2(\Omega)} \qquad &\forall \vec{v}_h\in \vec{V}_h,\\
+    -b(\vec{u}_h,q_h)&=0 \qquad &\forall q_h\in Q_h.
+  \end{aligned}
+\end{equation}
+We would like to define a discrete counterpart of the solution operator $S$, yet as we know from \cite{Brezzi} such an operator does not exist unless the inf-sup condition is satisfied.
+To overcome this issue, we introduce the following proposition:
+\begin{proposition}[Proposition 6.5.2 \cite{BBF}]
+  Since the bilinear form $a:\vec{V}_h\times \vec{V}_h\to \mathbb{R}$ is continuous and coercive on the kernel of the discrete divergence operator, i.e.~$\exists \alpha>0$ such that
+  \begin{equation}
+    a(\vec{v}_h,\vec{v}_h)\geq \alpha\, \norm{\vec{v}_h}^2_{\vec{V}} \qquad \forall \vec{v}_h\in \vec{K}_h\coloneqq \left\{\vec{v}_h\in \vec{V}_h\,|\, b(\vec{v}_h,q_h)=0\, \forall q_h\in Q_h\right\},
+  \end{equation}
+  then \eqref{eq:discreteSourceStokes} has at least one solution of the form $(\vec{u}_h,p_h)\in \vec{V}_h\times Q_h$. Furthermore, the $\vec{u}_h$ component of the solution is uniquely determined by the right-hand side $\vec{f}$ and the following estimate holds:
+  \begin{equation}
+    \norm{\vec{u}_h}_{\vec{V}}\leq \frac{1}{\alpha}\norm{\vec{f}_h}_{\vec{V}^\prime}.
+  \end{equation}
+  Hence, we can define the discrete solution operator $S_h:\vec{V}_h\to \vec{V}_h\times Q_h$ as the operator that maps $\vec{f}\in \vec{V}_h$ to a solution of \eqref{eq:discreteSourceStokes} when $\vec{f}$ is the right-hand side, suppose the one with the smallest norm.
+\end{proposition}
+Clearly, the existence of multiple discrete solutions when lacking the inf-sup condition forces us to consider a different approach to the well-posedness of the discrete eigenvalue problem, than just asking for $\norm{S-S_h}_{\mathcal{L}(\vec{V},\vec{V})}\to 0$ as $h\to 0$.
+For this reason we we consider the following ``prolongation'' operators and the ``restriction'' operators defined as their adjoints:
+\begin{equation}
+  \begin{aligned}
+    \pi_{\vec{V}}&:\vec{V}^\prime \to \vec{V}^\prime\times Q^\prime, \qquad &\vec{f}\mapsto (\vec{f},0),  \qquad\qquad \pi_{\vec{V}}^\ast&:\vec{V}\times Q \to \vec{V}, \qquad &(\vec{f},0) \mapsto \vec{f}\\ 
+    \pi_{Q}&:Q^\prime \to \vec{V}^\prime\times Q^\prime, \qquad &g\mapsto (0,g),  \qquad\qquad \pi_{Q}^\ast&:\vec{V}\times Q \to Q, \qquad &(0,g) \mapsto g.
+  \end{aligned}
+\end{equation}
+We now consider the restriction of the continuous and discrete solution operators defined as
+\begin{equation}
+  T\coloneqq \pi_{\vec{V}}^\ast\circ S\circ \pi_{\vec{V}}:\vec{H}\to \vec{H} \qquad \qquad \qquad T_h\coloneqq \pi_{\vec{V}}^\ast\circ S_h\circ \pi_{\vec{V}}:\vec{H} \to \vec{H}, 
+\end{equation}
+where $\vec{H}$ is the $\vec{L}^2(\Omega)$ space and we have identified $\vec{L}^2(\Omega)$ with its dual space and made used of the inclusion $\vec{V}\subset \vec{H}$ and $\vec{H}\subset \vec{V}^\prime$, hence we are not allowed any more Riesz identifications.
+Notice now that from the previous proposition, we have that $T$ and $T_h$ are well-posed and uniquely defined, so the only thing left to do is to discuss the necessary and sufficient conditions so that $\norm{T-T_h}_{\mathcal{L}(\vec{H},\vec{H})}\to 0$ as $h\to 0$.
+To achieve this goal we introduce two subspaces of $\vec{V}$ and $Q$ endowed with their natural norms, i.e.
+\begin{equation}
+  \begin{aligned}
+    \vec{V}_0 &= \pi_{\vec{V}}^\ast\circ S\circ \pi_{\vec{V}}\left(\vec{L}^2(\Omega)\right), \qquad \norm{\vec{u}}_{\vec{V}_0} = \underset{\vec{f}\in\, T^{-1}\vec{v}}{\inf}\norm{\vec{f}}_{\vec{L}^2(\Omega)},\\
+    Q_0 &= \pi_{Q}^\ast\circ S\circ \pi_{Q}\left(\vec{L}^2(\Omega)\right), \qquad \norm{q}_{\vec{Q}_0} = \underset{\vec{f}\in\, (\pi_Q^\ast \circ S \circ \pi_{\vec{V}})^{-1}\vec{v}}{\inf}\norm{\vec{f}}_{\vec{L}^2(\Omega)}.
+  \end{aligned}
+\end{equation}
+\begin{definition}
+  We say the pair $(Q_h,Q_0)$ satisfies the weak approximability condition if there exists a constant $C>0$ and an exponent $\gamma_1>0$ such that
+  \begin{equation}
+    \underset{\vec{v}_h\in \vec{K}_h}{\sup} \frac{b(\vec{v}_h,q_h)}{\norm{\vec{v}_h}_{\vec{V}}} \leq C h^{\gamma_1}\norm{p}_{\vec{Q}_0} \qquad \forall q_h\in Q_0.
+  \end{equation}
+\end{definition}
+\begin{definition}
+  We say the pair $(\vec{V}_h,\vec{V}_0)$ satisfies the strong approximability condition if there exists a constant $C>0$ and an exponent $\gamma_2>0$ such that
+  \begin{equation}
+    \underset{\vec{v}_h\in \vec{K}_h}{\inf} \norm{\vec{u}-\vec{v}_h}_{\vec{V}} \leq C h^{\gamma_2}\norm{u}_{\vec{V}_0} \qquad \forall \vec{u}\in \vec{V}_0.
+  \end{equation}
+\end{definition}
+\begin{theorem}[Theorem 6.5.1 and Theorem 6.5.2 \cite{BBF}]
+  The weak approximability condition on $(Q_h,Q_0)$ and the strong approximability condition on $(\vec{V}_h,\vec{V}_0)$ are necessary and sufficient for the convergence of $T_h$ to $T$ in the operator norm $\norm{\cdot}_{\mathcal{L}(\vec{H},\vec{H})}$.
+  In particular, if both conditions are satisfied, then the following estimate holds:
+  \begin{equation}
+    \norm{T\vec{f}-T_h\vec{f}}_{\vec{V}}\leq C h^{\min\{\gamma_1,\gamma_2\}}\norm{\vec{f}}_{\vec{H}}, \qquad \forall \vec{f}\in \vec{H}.
+  \end{equation}
+\end{theorem}
+At this point, we have most of the ingredients we need to proceed with the analysis of the well-posedness and convergence of the discrete eigenvalue problem.
+The only thing left to do is to discuss how to determine the order of convergence of the eigenvalues and eigenfunctions, once we have established the well-posedness of the discrete eigenvalue problem.
+The most common approach to determine the order of convergence of the eigenvalues and eigenfunctions is to use the one presented in \cite{MercierOsbornRappazRaviart}.
+Unfortunately, this approach can not used if the $S_h$ operator is not uniquely defined, as is the case when the inf-sup condition is not satisfied.
+For this reason, we use the theory of approximation of compact operators, directly on $T_h:\vec{H}\to\vec{H}$ and $T:\vec{H}\to\vec{H}$, to determine the order of convergence of the eigenvalues and eigenfunctions.
+\begin{theorem}[Theorem 48.8 \cite{ErnGuermond}]
+  Let $\omega$ be a non-zero eigenvalue of $T:\vec{H}\to\vec{H}$, with algebraic multiplicity $m_a(\omega)$. Notice that since $T:\vec{H}\to\vec{H}$ is self-adjoint, the algebraic multiplicity of the eigenvalues $\omega$ is equal to its geometric multiplicity $m_g(\omega)$.
+  Let $\{\omega_h^{(j)}\}_{j=1}^{m_a(\omega)}$ be the eigenvalues of $T_h:\vec{H}\to\vec{H}$ converging to $\omega$ as $h\to 0$.
+  Then, there exists a sufficiently small $h_0>0$ and a constant $C>0$ such that for all $h\leq h_0$ the following estimate holds:
+  \begin{equation}
+    \hat{\delta}(E_\omega,E_{h,\omega}) \leq C h^{2\min\{\gamma_1,\gamma_2\}},
+  \end{equation}
+  for all $h\leq h_0$, where $\hat{\delta}(E_\omega,E_{h,\omega})$ is the symmetric gap between the eigenspaces corresponding to $\omega$ and $\{\omega_h^{(j)}\}_{j=1}^{m_a(\omega)}$, respectively of $T$ and $T_h$.
+  Furthermore, the following estimate holds for all $j\in \{1,\ldots,m_a(\omega)\}$:
+  \begin{equation}
+    \abs{\omega-\omega_h^{(j)}} \leq C h^{2\min\{\gamma_1,\gamma_2\}}.
+  \end{equation} 
+  Lastly, for every $j\in \{1,\ldots,m_a(\omega)\}$ and unit vector $\vec{w}_h^{(j)}\in ker\left(T_h-\omega_{h}^{(j)}I\right)$ there exists a unit vector $\vec{u}\in ker\left(T-\omega I\right)$ such that
+  \begin{equation}
+    \norm{\vec{u}-\vec{w}_h^{(j)}}_{\vec{H}}\leq C h^{\min\{\gamma_1,\gamma_2\}}.
+  \end{equation}
+\end{theorem}
+\label{sec:approxCompact}
 \bibliographystyle{plain} % We choose the "plain" reference style
 \bibliography{metrix}
 
