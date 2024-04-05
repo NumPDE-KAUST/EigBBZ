@@ -201,13 +201,14 @@ To achieve this goal we introduce two subspaces of $\vec{V}$ and $Q$ endowed wit
 \begin{definition}
   We say the pair $(Q_h,Q_0)$ satisfies the weak approximability condition if there exists a constant $C>0$ and an exponent $\gamma_1>0$ such that
   \begin{equation}
-    \underset{\vec{v}_h\in \vec{K}_h}{\sup} \frac{b(\vec{v}_h,q_h)}{\norm{\vec{v}_h}_{\vec{V}}} \leq C h^{\gamma_1}\norm{p}_{\vec{Q}_0} \qquad \forall q_h\in Q_0.
+    \underset{\vec{v}_h\in \vec{K}_h}{\sup} \frac{b(\vec{v}_h,q)}{\norm{\vec{v}_h}_{\vec{V}}} \leq C h^{\gamma_1}\norm{q}_{\vec{Q}_0} \qquad \forall q\in Q_0.
   \end{equation}
 \end{definition}
 \begin{definition}
   We say the pair $(\vec{V}_h,\vec{V}_0)$ satisfies the strong approximability condition if there exists a constant $C>0$ and an exponent $\gamma_2>0$ such that
   \begin{equation}
-    \underset{\vec{v}_h\in \vec{K}_h}{\inf} \norm{\vec{u}-\vec{v}_h}_{\vec{V}} \leq C h^{\gamma_2}\norm{u}_{\vec{V}_0} \qquad \forall \vec{u}\in \vec{V}_0.
+    \label{eq:weakApprox}
+    \underset{\vec{v}_h\in \vec{K}_h}{\inf} \norm{\vec{u}-\vec{v}_h}_{\vec{V}} \leq C h^{\gamma_2}\norm{\vec{u}}_{\vec{V}_0} \qquad \forall \vec{u}\in \vec{V}_0.
   \end{equation}
 \end{definition}
 \begin{theorem}[Theorem 6.5.1 and Theorem 6.5.2 \cite{BBF}]
@@ -221,7 +222,7 @@ At this point, we have most of the ingredients we need to proceed with the analy
 The only thing left to do is to discuss how to determine the order of convergence of the eigenvalues and eigenfunctions, once we have established the well-posedness of the discrete eigenvalue problem.
 The most common approach to determine the order of convergence of the eigenvalues and eigenfunctions is to use the one presented in \cite{MercierOsbornRappazRaviart}.
 Unfortunately, this approach can not used if the $S_h$ operator is not uniquely defined, as is the case when the inf-sup condition is not satisfied.
-For this reason, we use the theory of approximation of compact operators, directly on $T_h:\vec{H}\to\vec{H}$ and $T:\vec{H}\to\vec{H}$, to determine the order of convergence of the eigenvalues and eigenfunctions.
+For this reason, we use the theory of approximation of compact operators, directly on $T_h:\vec{H}\to\vec{H}$ and $T:\vec{H}\to\vec{H}$, to determine the order of convergence of the eigenvalues and eigenfunctions, similarly to what is done in \cite{ErnGuermond, BrambleOsborn, Osborn, BabuskaOsborn}.
 \begin{theorem}[Theorem 48.8 \cite{ErnGuermond}]
   Let $\omega$ be a non-zero eigenvalue of $T:\vec{H}\to\vec{H}$, with algebraic multiplicity $m_a(\omega)$. Notice that since $T:\vec{H}\to\vec{H}$ is self-adjoint, the algebraic multiplicity of the eigenvalues $\omega$ is equal to its geometric multiplicity $m_g(\omega)$.
   Let $\{\omega_h^{(j)}\}_{j=1}^{m_a(\omega)}$ be the eigenvalues of $T_h:\vec{H}\to\vec{H}$ converging to $\omega$ as $h\to 0$.
@@ -239,7 +240,57 @@ For this reason, we use the theory of approximation of compact operators, direct
     \norm{\vec{u}-\vec{w}_h^{(j)}}_{\vec{H}}\leq C h^{\min\{\gamma_1,\gamma_2\}}.
   \end{equation}
 \end{theorem}
-\label{sec:approxCompact}
+\section{Sufficient conditions for the strong approximability condition}
+In this section, we will discuss two general criteria that guarantee the strong approximability condition.
+The reason why we focus our attention on the strong approximability condition and not on the weak approximability condition is that the weak approximability condition is a trivial consequence of the approximation properties of the finite element space $Q_h$.
+In fact, following \cite{BBG} we observe that since $b(\vec{v}_h,q_h)$ vanish for all $\vec{v}_h\in \vec{K}_h$ and $q_h\in Q_h$ we subtract from \eqref{eq:weakApprox} to obtain
+\begin{equation}
+  \underset{\vec{v}_h\in \mathbb{K}_h}{sup} \frac{b(\vec{v}_h, q)}{\norm{\vec{v}_h}_{\vec{V}}}= \underset{\vec{v}_h\in \mathbb{K}_h}{sup} \frac{b(\vec{v}_h, q-q_h)}{\norm{\vec{v}_h}_{\vec{V}}}\leq \norm{q-q_h}_{Q}.
+\end{equation}
+The previous inequality shows that the weak approximability condition is verified as long as any function of $Q_0$ can be ``well'' approximated by a function in $Q_h$.
+Focusing now on the strong approximability condition, the first criterion we will discuss is intimately related to the inf-sup condition and exactly divergence-free discretisation.
+\begin{theorem}
+  \label{thm:strongApproxInfSup}
+  Let us consider a discrete eigenvalue problem of the type of \eqref{eq:discreteStokes} and assume the following approximation properties hold:
+  \begin{align}
+    \forall q\in Q, \quad \exists q_h\in Q_h \text{ such that } \norm{q-q_h}_{Q}\leq C_1 h^{\gamma_1}\norm{q}_{Q_0},\\
+    \forall \vec{u}\in \vec{V}, \quad \exists \vec{v}_h\in \vec{V}_h \text{ such that } \norm{\vec{u}-\vec{v}_h}_{\vec{V}}\leq C_2 h^{\gamma_2}\norm{\vec{u}}_{\vec{V_0}},
+  \end{align}
+  for some $C_1,C_2>0$ and $\gamma_1,\gamma_2>0$.
+  We denote the range of the discrete divergence operator as $\hat{Q}_h$, i.e.
+  \begin{equation}
+    \hat{Q}_h = \left\{q_h\in Q_h\,|\, \exists \vec{v}_h\in \vec{V}_h \text{ such that } \nabla\cdot \vec{v}_h=q_h\right\}.
+  \end{equation}
+  If the finite element pair $(\vec{V}_h,\hat{Q}_h)$ satisfies the inf-sup condition, with inf-sup constant $\beta>0$, then both the strong and weak approximability conditions are satisfied with $\gamma_1,\gamma_2$ by the the finite element pair $(\vec{V}_h,Q_h)$.
+\end{theorem}
+\begin{proof}
+  We begin observing that if the inf-sup condition is satisfied by the pair $(\vec{V}_h,\hat{Q}_h)$, then the following estimate holds \cite[Proposition 5.1.3]{BBF}:
+  \begin{equation}
+    \underset{\vec{v}_h\in \hat{\mathbb{K}}_h}{\inf}\norm{\vec{v}-\vec{v}_h}_{\vec{V}}\leq \underset{\vec{v}_h\in \vec{V}_h}{\inf}\norm{\vec{v}-\vec{v}_h}_{\vec{V}}\leq C(\beta)h^{\gamma_2}\norm{\vec{v}}_{\vec{V}},\label{eq:strongApproxOptimalKernel}
+  \end{equation}
+  where $\hat{\mathbb{K}}_h\coloneqq \left\{\vec{v}_h\in \vec{V}_h\,|\, b(\vec{v}_h,q_h)=0\, \forall q_h\in \hat{Q}_h\right\}$.
+  We notice that $\hat{\mathbb{K}}_h\subset \vec{K}_h$, in fact if we pick $\vec{v}_h\in \hat{\mathbb{K}}_h$ and $q_h = \nabla\cdot \vec{v}_h$ then $b(\vec{v}_h,q_h)=0$ implies that the divergence of $\vec{v}_h$ vanishes almost everywhere, hence $\vec{v}_h\in \mathbb{K}_h$.
+  Therefore from \eqref{eq:strongApproxOptimalKernel} we have that the strong approximability condition is satisfied and the weak approximability condition is trivially satisfied as previously discussed.
+\end{proof}
+\begin{example}[Scott--Vogelius]
+  One of the classical examples of divergence-free discretisation, in two dimensions, is the use of the Scott-Vogelius finite element pair $\left(\mathcal{P}^{k}(\mathcal{T}_h),\mathcal{P}^{k-1}_{disc}(\mathcal{T}_h)\right)$, where $\mathcal{T}_h$ is a simplicial mesh of the domain $\Omega$.
+  While the Scott-.Vogelius pair seems the most natural choice for the Stokes eigenvalue problem, it is well known that the inf-sup condition is not satisfied for this pair for all values of $k\in\mathbb{B}$.
+  In fact, it has been shown in \cite{GuzmanScott,ScottVogelius} that the inf-sup condition is satisfied for the Scott-Vogelius pair provided that $k\geq 4$ and we consider as pressure space the subspaces of $\mathcal{P}^{k-1}_{disc}(\mathcal{T}_h)$ defined as
+  \begin{equation}
+    \hat{Q}_h = \left\{q_h\in \mathcal{P}^{k-1}_{disc}(\mathcal{T}_h)\,|\, \sum_{j=1}^{N(\vec{z})} (-1)^{N-j} q_h\big|_{T_j(\vec{z})}(\vec{z}) = 0 \quad \forall \vec{z}\in \mathcal{S}(\mathcal{T}_h)\right\},
+  \end{equation}
+  where $\mathcal{S}(\mathcal{T}_h)$ is the set of all singular vertices of the mesh $\mathcal{T}_h$ and $T_j$ are the $N(\vec{z})$ simplices of the mesh $\mathcal{T}_h$ in the patch touching the singular vertex $\vec{z}$, i.e. vertices that are shared by two or more colinear edges. 
+  Since the inf-sup condition is satisfied for $\left(\mathcal{P}^{k}(\mathcal{T}_h),\hat{Q}_h\right)$, we can apply Theorem \ref{thm:strongApproxInfSup} to conclude that the strong and weak approximability conditions are satisfied for the finite element pair $\left(\mathcal{P}^{k}(\mathcal{T}_h),\mathcal{P}^{k-1}_{disc}(\mathcal{T}_h)\right)$.
+  This tells us that the Scott--Vogelius pair, with $k\geq 4$, is a good choice for the Stokes eigenvalue problem, independently of any geometrical restriction on the mesh.
+  Under minor assumptions on the mesh it has been proven in \cite{GuzmanScott2} that there exists a pressure space $\hat{Q}_h$ such that the inf-sup condition is satisfied for the Scott-Vogelius pair with $k=3$, hence the strong approximability condition is satisfied for the finite element pair $\left(\mathcal{P}^{3}(\mathcal{T}_h),\mathcal{P}^{2}_{disc}(\mathcal{T}_h)\right)$.
+  Therefore the Scott--Vogelius pair with $k=3$ is a good choice for the Stokes eigenvalue problem, provided that the mesh satisfies the minor assumptions of \cite{GuzmanScott2} as we show in Example \ref{ex:ScottVogelius3}.
+\end{example}
+\begin{example}[Alfeld split meshes]
+  In \cite{ArnoldQin} it was shown that for two-dimensional domain the inf-sup condition is satisfied for the pair $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^1_{disc}(\mathcal{T}_h)\right)$ on special meshes known as Alfeld split meshes.
+  Alfeld split meshes are a particular type of mesh where each triangle is split into three sub-triangles by connecting the vertices of the triangle with its barycenter.
+  Interestingly, the Alfeld splits remove any singular vertex from the mesh, hence the pressure space $\hat{Q}_h$ is the full space $\mathbb{P}^1_{disc}(\mathcal{T}_h)$.
+  Since the inf-sup condition is satisfied for $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^1_{disc}(\mathcal{T}_h)\right)$, we can apply Theorem \ref{thm:strongApproxInfSup} to conclude that the strong and weak approximability conditions are satisfied for the finite element pair $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^2_{disc}(\mathcal{T}_h)\right)$ and $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^1(\mathcal{T}_h)\right)$.
+\end{example}
 \bibliographystyle{plain} % We choose the "plain" reference style
 \bibliography{metrix}
 
