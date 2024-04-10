@@ -286,10 +286,27 @@ Focusing now on the strong approximability condition, the first criterion we wil
   Therefore the Scott--Vogelius pair with $k=3$ is a good choice for the Stokes eigenvalue problem, provided that the mesh satisfies the minor assumptions of \cite{GuzmanScott2} as we show in Example \ref{ex:ScottVogelius3}.
 \end{example}
 \begin{example}[Alfeld split meshes]
-  In \cite{ArnoldQin} it was shown that for two-dimensional domain the inf-sup condition is satisfied for the pair $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^1_{disc}(\mathcal{T}_h)\right)$ on special meshes known as Alfeld split meshes.
+  In \cite{ArnoldQin, FuGuzmanNeilan} it is shown that for two-dimensional domain the inf-sup condition is satisfied by the pair $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^1_{disc}(\mathcal{T}_h)\right)$ on special meshes known as Alfeld split meshes.
   Alfeld split meshes are a particular type of mesh where each triangle is split into three sub-triangles by connecting the vertices of the triangle with its barycenter.
   Interestingly, the Alfeld splits remove any singular vertex from the mesh, hence the pressure space $\hat{Q}_h$ is the full space $\mathbb{P}^1_{disc}(\mathcal{T}_h)$.
-  Since the inf-sup condition is satisfied for $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^1_{disc}(\mathcal{T}_h)\right)$, we can apply Theorem \ref{thm:strongApproxInfSup} to conclude that the strong and weak approximability conditions are satisfied for the finite element pair $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^2_{disc}(\mathcal{T}_h)\right)$ and $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^1(\mathcal{T}_h)\right)$.
+  Since, on Alfeld splits, the inf-sup condition is satisfied for $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^1_{disc}(\mathcal{T}_h)\right)$, we can apply Theorem \ref{thm:strongApproxInfSup} to conclude that the strong and weak approximability conditions are satisfied for the finite element pair $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^2_{disc}(\mathcal{T}_h)\right)$ and $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^2(\mathcal{T}_h)\right)$.
+  A numerical study of the above-mentioned finite element pairs on Alfeld split meshes will be presented in Example \ref{ex:Alfeld}.
+\end{example}
+\begin{remark}
+  In the previous example we didn't discuss the $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^1(\mathcal{T}_h)\right)$ finite element pair. In fact, while one Theorem \ref{thm:strongApproxInfSup} would ensure both strong and weak stability as for the other pairs in the previous example, the $\left(\mathbb{P}^2(\mathcal{T}_h),\mathbb{P}^1(\mathcal{T}_h)\right)$ is inf-sup stable on its own as proven in \cite{Boffi, HoodTaylor}.
+\end{remark}
+\begin{example}[Powell--Sabin]
+  It has been shown in \cite{GuzmanLischkeNeilan, FabienGuzmanNeilanZytoon} that for two-dimensional domains the inf-sup condition is satisfied by the pair $\left(\mathbb{P}^1(\mathcal{T}_h),\hat{Q}_h\right)$, provided $\mathcal{T}_h$ is obtained via Powell-Sabin splits and the pressure space is defined as
+  \begin{equation}
+    \hat{Q}_h = \left\{q_h\in \mathcal{P}^{0}(\mathcal{T}_h)\,|\, \sum_{j=1}^{N(\vec{z})} (-1)^{N-j} q_h\big|_{T_j(\vec{z})}(\vec{z}) = 0 \quad \forall \vec{z}\in \mathcal{S}(\mathcal{T}_h)\right\},
+  \end{equation}
+  Powell--Sabin split meshes are a particular type of mesh where each triangle is split into six sub-triangles by first performing an Alfeld split and then connecting the midpoint of the original triangles with the barycenter.
+  Since, on Powell--Sabin splits, the inf-sup condition is satisfied for $\left(\mathbb{P}^1(\mathcal{T}_h),\mathbb{P}^0(\mathcal{T}_h)\right)$, we can apply Theorem \ref{thm:strongApproxInfSup} to conclude that the strong and weak approximability conditions are satisfied for the finite element pair $\left(\mathbb{P}^1(\mathcal{T}_h),\mathbb{P}^1_{disc}(\mathcal{T}_h)\right)$ and $\left(\mathbb{P}^1(\mathcal{T}_h),\mathbb{P}^1(\mathcal{T}_h)\right)$.
+  A numerical study of the above-mentioned finite element pairs on Powell--Sabin split meshes will be presented in Example \ref{ex:Powell-Sabin}.
+\end{example}
+\begin{example}
+  Scott-Vogelius elements pair can be used also when the domain $\Omega$ is three-dimensional. In  particular, it has been proven in \cite{Zhang} that on freudenthal meshes the Scott-Vogelius finite element pair is inf-sup stable for $k\geq 6$.
+  Furthermore its well-known in the litterature that if suitable constraints are imposed on the pressure space then for $k\geq 2$ the Scott-Vogelius pair is inf-sup stable Alfeld splits also for three-dimensional domain, and on Worsey-–Farin splits the Scott-Vogelius pair is inf-sup stable fro any $k\geq 1$, \cite{FuGuzmanNeilan, FabienGuzmanNeilanZytoon}.
 \end{example}
 \bibliographystyle{plain} % We choose the "plain" reference style
 \bibliography{metrix}
